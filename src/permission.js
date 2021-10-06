@@ -9,6 +9,7 @@ router.beforeEach(((to, from, next) => {
     if (getToken()){
         if (to.path === '/login'){
             next({path: '/'})
+            console.log("this is not login")
         }else {
             if (store.getters.roles.length === 0) {
                 store.dispatch('GetInfo').then(res => {

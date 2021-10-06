@@ -108,7 +108,7 @@
 
 <script>
     import {formatDate} from '@/utils/date'
-    import {fetchList,allocRole,getRoleByAdmin} from "@/api/login";
+    import {fetchList,allocRole,getRoleByAdmin,createAdmin,updateAdmin,deleteAdmin,updateStatus} from "@/api/login";
     import {fetchAllRoleList} from "@/api/role";
 
     const defaultListQuery = {
@@ -191,8 +191,25 @@
                 this.listQuery.pageNum = val;
                 this.getList();
             },
-            handleStatusChange() {
-
+            handleStatusChange(index, row) {
+                this.$confirm("是否要修改该状态",'提示',{
+                    confirmButtonText: '确定',
+                    cancelButtonClass: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    updateStatus(row.id, {status: row.status}).then(response => {
+                       this.$message({
+                         type: 'success',
+                         message: '修改成功'
+                       });
+                    });
+                }).catch(() => {
+                   this.$message({
+                       type: 'info',
+                       message: '取消修改'
+                   });
+                   this.getList();
+                });
             },
             handleSelectRole(index,row) {
                 this.allocAdminId = row.id;
@@ -204,11 +221,47 @@
                 this.isEdit = true;
                 this.admin = Object.assign({},row); //浅拷贝
             },
-            handleDelete() {
-
+            handleDelete(index, row) {
+                this.$confirm("是否要删除用户？",'提示',{
+                    confirmButtonText: '确定',
+                    cancelButtonClass: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteAdmin(row.id).then(response => {
+                       this.$message({
+                           type: 'success',
+                           message: '删除成功'
+                       });
+                       this.getList();
+                    });
+                });
             },
             handleDialogConfirm() {
-
+                this.$confirm('是否要提示？','提示',{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    if (this.isEdit){
+                        updateAdmin(this.admin.id, this.admin).then(response => {
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            this.dialogVisible = false;
+                            this.getList();
+                        })
+                    }else {
+                        createAdmin(this.admin).then(response => {
+                            this.$message({
+                                message: '添加成功',
+                                type: 'success'
+                            });
+                            this.dialogVisible = false;
+                            this.getList();
+                        })
+                    }
+                })
             },
             handleAllocDialogConfirm() {
                 this.$confirm('是否要确认','提示',{

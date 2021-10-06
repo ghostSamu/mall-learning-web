@@ -11,6 +11,39 @@ export function login(username, password) {
     })
 }
 
+export function updateStatus(id, params) {
+    return request({
+        url: '/admin/updateStatus/' + id,
+        method: 'post',
+        params: params
+    })
+}
+
+export function createAdmin(data) {
+    return request({
+        url: '/admin/register',
+        method: 'post',
+        data: data
+    })
+}
+
+export function updateAdmin(id, data) {
+    return request({
+        url: '/admin/update' + id,
+        method: 'post',
+        data: data
+    })
+}
+
+
+export function deleteAdmin(id) {
+    return request({
+        url: '/admin/delete' + id,
+        method: 'post'
+    })
+}
+
+
 export function getInfo() {
     return request({
         url: '/admin/info',
